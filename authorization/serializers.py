@@ -2,6 +2,8 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 
 from rest_framework import serializers, status
+from .models import Profile
+
 
 User = get_user_model()
 
@@ -30,3 +32,25 @@ class RegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('username', 'email', 'password', 'password2')
+
+
+class ProfileUpdateBase(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+
+class ProfileEmailUpdateSerializer(ProfileUpdateBase):
+    class Meta:
+        model = Profile
+        fields = ('user', 'email')
+
+
+class ProfileUpdateTelegramIDSerializer(ProfileUpdateBase):
+    class Meta:
+        model = Profile
+        fields = ('user', 'telegram_username')
+
+
+class ProfileUpdatePreferredMethodSerializer(ProfileUpdateBase):
+    class Meta:
+        model = Profile
+        fields = ('user', 'preferred_contact_method')

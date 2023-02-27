@@ -15,6 +15,7 @@ class Profile(models.Model):
     )
 
     telegram_username = models.CharField(max_length=120, unique=True, null=True)
+    email = models.EmailField(default='samoilenkoa7@gmail.com', unique=True)
     is_telegram_notifications = models.BooleanField(default=True)
     is_email_notifications = models.BooleanField(default=False)
     preferred_contact_method = models.CharField(choices=PREFERRED_CONTACT_TYPES, max_length=10, default='tg')
@@ -24,4 +25,4 @@ class Profile(models.Model):
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, *args, **kwargs):
     if created:
-        Profile.objects.create(user=instance)
+        Profile.objects.create(user=instance, email=instance.email)
